@@ -1,4 +1,7 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener,
+  ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
+
+import { LiveDotComponent } from './live-dot/live-dot.component';
 
 @Component({
   selector: 'app-scene',
@@ -7,6 +10,8 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener }
 })
 export class SceneComponent implements OnInit, AfterViewInit {
   @ViewChild('scene') sceneElement: ElementRef;
+  @ViewChild('scene', { read: ViewContainerRef }) container: ViewContainerRef;
+
   public sceneBorderPos: Object;
 
   @HostListener('window:resize') onResize() {
@@ -15,12 +20,22 @@ export class SceneComponent implements OnInit, AfterViewInit {
       console.log(this.sceneBorderPos);
     }
   }
-  constructor() { }
+
+  constructor(private componentFactoryResolver: ComponentFactoryResolver,
+  ) { }
 
   ngOnInit() { }
 
   ngAfterViewInit() {
     this.sceneBorderPos = this.getBorderPositions();
+    this.createCmp();
+    this.createCmp();
+    }
+
+  createCmp() {
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(LiveDotComponent);
+    const containerRef = this.container;
+    containerRef.createComponent(componentFactory);
   }
 
   getBorderPositions(): Object {

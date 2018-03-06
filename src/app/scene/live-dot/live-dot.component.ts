@@ -9,9 +9,7 @@ export class LiveDotComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() { }
   travel() { }
   onHitWall() { }
   reproduce() { }

@@ -17,6 +17,9 @@ import { LiveDotComponent } from './scene/live-dot/live-dot.component';
     BrowserModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    LiveDotComponent
+  ]
 })
 export class AppModule { }
