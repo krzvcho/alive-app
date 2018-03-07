@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-live-dot',
@@ -6,10 +7,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./live-dot.component.scss']
 })
 export class LiveDotComponent implements OnInit {
+  @ViewChild('dot') dotElement: ElementRef;
+  constructor() {}
 
-  constructor() { }
+  ngOnInit() {
+    this.setRandomStartPos();
+  }
+  setRandomStartPos() {
+    const rand = function(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    };
 
-  ngOnInit() { }
+    this.dotElement.nativeElement.style.backgroundColor = '#5789D8';
+    this.dotElement.nativeElement.style.top = rand(0, 100) + 'px';
+    this.dotElement.nativeElement.style.left = rand(0, 100) + 'px';
+  }
   travel() { }
   onHitWall() { }
   reproduce() { }

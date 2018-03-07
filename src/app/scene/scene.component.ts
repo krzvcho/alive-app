@@ -10,7 +10,7 @@ import { LiveDotComponent } from './live-dot/live-dot.component';
 })
 export class SceneComponent implements OnInit, AfterViewInit {
   @ViewChild('scene') sceneElement: ElementRef;
-  @ViewChild('scene', { read: ViewContainerRef }) container: ViewContainerRef;
+  @ViewChild('sceneContainer', { read: ViewContainerRef }) container: ViewContainerRef;
 
   public sceneBorderPos: Object;
 
@@ -28,14 +28,14 @@ export class SceneComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.sceneBorderPos = this.getBorderPositions();
-    this.createCmp();
-    this.createCmp();
     }
 
   createCmp() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(LiveDotComponent);
-    const containerRef = this.container;
-    containerRef.createComponent(componentFactory);
+    this.container.createComponent(componentFactory);
+  }
+  addDot() {
+    this.createCmp();
   }
 
   getBorderPositions(): Object {
