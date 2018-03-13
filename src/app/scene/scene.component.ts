@@ -32,7 +32,9 @@ export class SceneComponent implements OnInit, AfterViewInit {
 
   createCmp() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(LiveDotComponent);
-    this.container.createComponent(componentFactory);
+    const cmp = this.container.createComponent(componentFactory);
+
+    cmp.instance.bounds = this.sceneBorderPos;
   }
   addDot() {
     this.createCmp();
