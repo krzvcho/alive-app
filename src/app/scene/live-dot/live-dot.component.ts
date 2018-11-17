@@ -1,5 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+//import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import { interval } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-live-dot',
@@ -25,16 +27,8 @@ export class LiveDotComponent implements OnInit {
     this.dotElement.nativeElement.style.left = rand(0, 100) + '%';
   }
   travel() {
-    const interval = IntervalObservable
-      .create(10)
-      .subscribe((i) => {
-        this.dotElement.nativeElement.style.top = i + '%';
-        if (i === 100) {
-          interval.unsubscribe();
-        }
-      });
+    console.log('starting traveling');
   }
   onHitWall() { }
   reproduce() { }
-
 }
