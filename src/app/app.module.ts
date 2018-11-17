@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SceneComponent } from './scene/scene.component';
 import { LiveDotComponent } from './scene/live-dot/live-dot.component';
@@ -14,7 +14,8 @@ import { LiveDotComponent } from './scene/live-dot/live-dot.component';
     LiveDotComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent],
