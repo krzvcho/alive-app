@@ -1,5 +1,7 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener,
-  ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
+import {
+  Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener,
+  ViewContainerRef, ComponentFactoryResolver
+} from '@angular/core';
 
 import { LiveDotComponent } from './live-dot/live-dot.component';
 
@@ -13,11 +15,11 @@ export class SceneComponent implements OnInit, AfterViewInit {
   @ViewChild('sceneContainer', { read: ViewContainerRef }) container: ViewContainerRef;
 
   public sceneBorderPos: Object;
+  public cmpList = [];
 
   @HostListener('window:resize') onResize() {
     if (this.sceneElement) {
       this.sceneBorderPos = this.getBorderPositions();
-      console.log(this.sceneBorderPos);
     }
   }
 
@@ -28,16 +30,24 @@ export class SceneComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.sceneBorderPos = this.getBorderPositions();
-    }
+  }
 
-  createCmp() {
+  createCmp(pos?) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(LiveDotComponent);
     const cmp = this.container.createComponent(componentFactory);
-
+    this.cmpList.push(cmp);  
+    cmp.instance.pos = pos; 
     cmp.instance.bounds = this.sceneBorderPos;
+    cmp.instance.size = { width: '1%', height: '1%' };
+    cmp.instance.wallCollisionEvent.subscribe(pos => {
+      //this.addDot(pos);
+      //cmp.destroy();
+      console.log(this.cmpList);
+    });
+
   }
-  addDot() {
-    this.createCmp();
+  addDot(pos?) {
+    this.createCmp(pos);
   }
 
   getBorderPositions(): Object {
