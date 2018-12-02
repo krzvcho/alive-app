@@ -28,6 +28,10 @@ export class LiveDotComponent implements OnInit {
     return {
       top: parseInt(this.elStyles.top),
       left: parseInt(this.elStyles.left),
+      right: parseInt(this.elStyles.left) + parseInt(this.elStyles.width),
+      bottom: parseInt(this.elStyles.top) + parseInt(this.elStyles.height),
+      width: parseInt(this.elStyles.width),
+      height: parseInt(this.elStyles.height),
       type: '%'
     }
   }
@@ -37,7 +41,6 @@ export class LiveDotComponent implements OnInit {
   }
   setStartPos(pos) {
     if(pos){
-      console.log(pos, this.size);
       this.elStyles.backgroundColor = '#f00';
       this.elStyles.top = (pos.top === 0 ? pos.top + 3 : pos.top - 3) + '%';
       this.elStyles.left = (pos.left=== 0 ? pos.left + 3 : pos.left - 3) + "%";
@@ -52,15 +55,12 @@ export class LiveDotComponent implements OnInit {
     const animStream = interval(100);
     
     const subscription = animStream.subscribe(n => {
-      const actualPos = this.getDotPostition();
-
       if(this.detectWallCollision()){
-        //subscription.unsubscribe();
-        this.onWallCollision(actualPos);
+        this.onWallCollision();
         return;
       }
-      this.dotElement.nativeElement.style.top = (actualPos.top + this.rand(-1, 1)) + actualPos.type;
-      this.dotElement.nativeElement.style.left = (actualPos.left + this.rand(-1, 1)) + actualPos.type;
+      this.dotElement.nativeElement.style.top = (this.getDotPostition().top + this.rand(-1, 1)) + this.getDotPostition().type;
+      this.dotElement.nativeElement.style.left = (this.getDotPostition().left + this.rand(-1, 1)) + this.getDotPostition().type;
     });
 
   }
@@ -68,20 +68,38 @@ export class LiveDotComponent implements OnInit {
   detectWallCollision(){
     const actualPos = this.getDotPostition();
     const leftWallHit = (actualPos.left <= 0) ? true: false;
-    const topWallHit = (actualPos.top <= 0) ? true:false;
-    const rightWallHit = (actualPos.left >= (100 - parseInt(this.size.width))) ? true: false;
-    const bottomWallHit = (actualPos.top >= (100 - parseInt(this.size.height))) ? true: false;
+    const topWallHit = (actualPos.top <= 0) ? true: false;
+    const rightWallHit = (actualPos.right >= 100) ? true: false;
+    const bottomWallHit = (actualPos.bottom >= 100) ? true: false;
 
     return leftWallHit || topWallHit || rightWallHit || bottomWallHit;
   }
 
-  onWallCollision(pos){
-    this.wallCollisionEvent.emit(pos);
-    this.elStyles.top = (pos.top === 0 ? pos.top + 3 : pos.top - 3) + '%';
-    this.elStyles.left = (pos.left=== 0 ? pos.left + 3 : pos.left - 3) + "%";
+  onWallCollision(){
+    //this.wallCollisionEvent.emit(pos);
+    this.elStyles.top = '50%';
+    this.elStyles.left = '50%';
     this.elStyles.width = (parseInt(this.elStyles.width) + 1) + "%";
     this.elStyles.height = (parseInt(this.elStyles.height) + 1) + "%";
     
+    const mutations: Array<string> = ['grow', 'colorize', 'shrink', 'radius']
+
+    switch (this.randomArrayItem(mutations)) {
+      case 'grow':
+        this.elStyles.width = this.elStyles.width <= 6 ? (parseInt(this.elStyles.width) + 1) + "%": this.elStyles.width;
+        this.elStyles.height = this.elStyles.height <= 6 ? (parseInt(this.elStyles.height) + 1) + "%": this.elStyles.height;
+        break;
+      case 'shrink':
+        this.elStyles.width = this.elStyles.width>1 ? (parseInt(this.elStyles.width) - 1) + "%" : this.elStyles.width;
+        this.elStyles.height = this.elStyles.height>1 ? (parseInt(this.elStyles.height) - 1) + "%" : this.elStyles.height;
+        break
+      case 'colorize':
+        this.elStyles.backgroundColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+        break;
+      case 'radius':
+        this.elStyles.borderRadius = this.rand(0, 40)+'px';
+        break;
+    }
   }
 
   reproduce() { }
@@ -93,4 +111,7 @@ export class LiveDotComponent implements OnInit {
   rand(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
+  randomArrayItem(items){
+    return items[Math.floor(Math.random()*items.length)]; 
+  }
 }

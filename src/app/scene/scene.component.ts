@@ -42,7 +42,7 @@ export class SceneComponent implements OnInit, AfterViewInit {
     cmp.instance.wallCollisionEvent.subscribe(pos => {
       //this.addDot(pos);
       //cmp.destroy();
-      console.log(this.cmpList);
+      //console.log(this.cmpList);
     });
 
   }
